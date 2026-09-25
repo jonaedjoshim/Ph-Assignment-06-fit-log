@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { useWorkoutList } from "@/lib/use-workout-list";
 
 const navItems = [
     {
@@ -18,6 +19,8 @@ const navItems = [
 
 export default function Navbar() {
     const pathname = usePathname();
+    const plan = useWorkoutList("plan");
+    const saved = useWorkoutList("saved");
 
     const isActive = (href: string) => {
         if (href === "/") {
@@ -59,8 +62,8 @@ export default function Navbar() {
                             href={item.href}
                             aria-current={isActive(item.href) ? "page" : undefined}
                             className={`rounded-full px-5 py-2 text-sm transition-colors ${isActive(item.href)
-                                ? "bg-(--accent)/10 font-semibold text-(--accent)"
-                                : "text-(--foreground)/70 hover:text-(--accent)"
+                                    ? "bg-(--accent)/10 font-semibold text-(--accent)"
+                                    : "text-(--foreground)/70 hover:text-(--accent)"
                                 }`}
                         >
                             {item.label}
@@ -74,8 +77,9 @@ export default function Navbar() {
                         className="flex items-center gap-2 text-sm text-(--foreground)/80"
                     >
                         <span>Plan</span>
+
                         <span className="flex size-6 items-center justify-center rounded-full bg-(--accent) text-xs font-bold text-black">
-                            0
+                            {plan.length}
                         </span>
                     </Link>
 
@@ -84,8 +88,9 @@ export default function Navbar() {
                         className="flex items-center gap-2 text-sm text-(--muted)"
                     >
                         <span>Saved</span>
+
                         <span className="flex size-6 items-center justify-center rounded-full border border-(--border) text-xs">
-                            0
+                            {saved.length}
                         </span>
                     </Link>
                 </div>
@@ -98,7 +103,7 @@ export default function Navbar() {
                         aria-haspopup="menu"
                         className="btn btn-square btn-ghost text-white"
                     >
-                        <HiOutlineMenuAlt3 className="size-6" />
+                        <HiOutlineMenuAlt3 className="size-6" aria-hidden="true" />
                     </button>
 
                     <ul
@@ -125,7 +130,7 @@ export default function Navbar() {
                             <Link href="/my-plan">
                                 Plan
                                 <span className="badge border-none bg-(--accent) text-black">
-                                    0
+                                    {plan.length}
                                 </span>
                             </Link>
                         </li>
@@ -134,7 +139,7 @@ export default function Navbar() {
                             <Link href="/my-plan">
                                 Saved
                                 <span className="badge badge-outline border-(--border)">
-                                    0
+                                    {saved.length}
                                 </span>
                             </Link>
                         </li>

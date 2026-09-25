@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
 import AppShell from "@/components/layout/AppShell";
+import ToastProvider from "@/components/ui/ToastProvider";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -26,6 +28,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className={oswald.variable}>
         <AppShell>{children}</AppShell>
+        <ToastProvider />
       </body>
     </html>
   );

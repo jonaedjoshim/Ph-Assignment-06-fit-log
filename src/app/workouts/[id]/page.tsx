@@ -88,7 +88,7 @@ export default async function WorkoutDetailsPage({
                 </div>
 
                 <div className="mt-9">
-                    <WorkoutActions />
+                    <WorkoutActions workout={workout} />
                 </div>
             </div>
         </section>
