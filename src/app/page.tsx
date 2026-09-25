@@ -1,3 +1,4 @@
+import WorkoutGrid from "@/components/workouts/WorkoutGrid";
 import { getWorkouts } from "@/services/workout-service";
 
 export default async function HomePage() {
@@ -5,17 +6,17 @@ export default async function HomePage() {
 
   return (
     <section className="py-16">
-      <p className="text-sm font-semibold uppercase tracking-widest text-(--accent)">
-        Workout Library
-      </p>
+      <div className="mb-8">
+        <h1 className="font-display text-4xl font-bold uppercase text-white">
+          The Library
+        </h1>
 
-      <h1 className="font-display mt-4 text-5xl font-bold uppercase">
-        FitLog
-      </h1>
+        <p className="mt-1 text-sm text-(--muted)">
+          Twelve lifts covering every major muscle group.
+        </p>
+      </div>
 
-      <p className="mt-4 text-(--muted)">
-        {workouts.length} workouts loaded
-      </p>
+      <WorkoutGrid workouts={workouts} />
     </section>
   );
 }
