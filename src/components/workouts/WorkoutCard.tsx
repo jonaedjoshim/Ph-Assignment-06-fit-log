@@ -28,7 +28,7 @@ export default function WorkoutCard({ workout }: WorkoutCardProps) {
             <div className="p-5">
                 <MuscleTags muscleGroups={workout.muscleGroups} />
 
-                <h2 className="font-display mt-4 text-xl font-bold uppercase tracking-wide text-white">
+                <h2 className="font-display mt-4 line-clamp-2 text-xl font-bold uppercase tracking-wide text-white">
                     {workout.name}
                 </h2>
 

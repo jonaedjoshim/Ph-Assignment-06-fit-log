@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function EmptyPlan() {
     return (
-        <div className="flex min-h-75 flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--border)] px-6 py-16 text-center">
+        <div className="flex min-h-75 flex-col items-center justify-center rounded-2xl border border-dashed border-(--border) px-6 py-16 text-center">
             <h2 className="font-display text-2xl font-bold uppercase text-white">
                 Nothing Here Yet
             </h2>

@@ -23,7 +23,7 @@ export default function Footer() {
                     </span>
                 </Link>
 
-                <p className="text-center text-xs text-(--muted) sm:text-right">
+                <p className="max-w-lg text-center text-xs leading-5 text-(--muted) sm:text-right">
                     © 2026 FitLog — Workout Library. Train hard, log honest.
                 </p>
             </div>
