@@ -1,20 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { IoChevronDown } from "react-icons/io5";
+import { toast } from "react-toastify";
 import EmptyPlan from "./EmptyPlan";
 import PlanMetrics from "./PlanMetrics";
 import PlanWorkoutCard from "./PlanWorkoutCard";
+import {
+    markWorkoutAsDone,
+    removeWorkoutFromList,
+} from "@/lib/workout-storage";
 import { useWorkoutList } from "@/lib/use-workout-list";
+import {
+    sortWorkouts,
+    type WorkoutSortOption,
+} from "@/lib/workout-utils";
+import type { Workout } from "@/types/workout";
 
 type ActiveTab = "plan" | "saved";
 
+const sortLabels: Record<WorkoutSortOption, string> = {
+    duration: "Duration",
+    calories: "Calories",
+    rating: "Rating",
+};
+
 export default function PlanContent() {
     const [activeTab, setActiveTab] = useState<ActiveTab>("plan");
+    const [sortOption, setSortOption] =
+        useState<WorkoutSortOption>("duration");
 
     const plan = useWorkoutList("plan");
     const saved = useWorkoutList("saved");
 
-    const displayedWorkouts = activeTab === "plan" ? plan : saved;
+    const activeWorkouts = activeTab === "plan" ? plan : saved;
+
+    const displayedWorkouts = useMemo(
+        () => sortWorkouts(activeWorkouts, sortOption),
+        [activeWorkouts, sortOption],
+    );
+
+    const handleMarkDone = (workout: Workout) => {
+        markWorkoutAsDone(workout.id);
+        toast.success(`${workout.name} marked as done.`);
+    };
+
+    const handleRemove = (workout: Workout) => {
+        removeWorkoutFromList(workout.id, activeTab);
+
+        toast.success(
+            activeTab === "plan"
+                ? `${workout.name} removed from today's plan.`
+                : `${workout.name} removed from saved workouts.`,
+        );
+    };
 
     return (
         <>
@@ -32,8 +71,8 @@ export default function PlanContent() {
                         aria-selected={activeTab === "plan"}
                         onClick={() => setActiveTab("plan")}
                         className={`rounded-lg px-5 py-2 text-sm transition ${activeTab === "plan"
-                                ? "bg-(--surface-light) font-semibold text-white"
-                                : "text-(--muted)"
+                            ? "bg-(--surface-light) font-semibold text-white"
+                            : "text-(--muted)"
                             }`}
                     >
                         Today&apos;s Plan
@@ -45,8 +84,8 @@ export default function PlanContent() {
                         aria-selected={activeTab === "saved"}
                         onClick={() => setActiveTab("saved")}
                         className={`rounded-lg px-5 py-2 text-sm transition ${activeTab === "saved"
-                                ? "bg-(--surface-light) font-semibold text-white"
-                                : "text-(--muted)"
+                            ? "bg-(--surface-light) font-semibold text-white"
+                            : "text-(--muted)"
                             }`}
                     >
                         Saved
@@ -56,12 +95,42 @@ export default function PlanContent() {
                 <div className="flex items-center gap-3 text-sm">
                     <span className="text-(--muted)">Sort By</span>
 
-                    <button
-                        type="button"
-                        className="btn btn-sm border border-(--border) bg-(--surface) font-normal text-white shadow-none"
-                    >
-                        Duration
-                    </button>
+                    <div className="dropdown dropdown-end">
+                        <button
+                            type="button"
+                            tabIndex={0}
+                            className="btn btn-sm min-w-28 border border-(--border) bg-(--surface) font-normal text-white shadow-none hover:bg-(--surface-light)"
+                        >
+                            {sortLabels[sortOption]}
+                            <IoChevronDown
+                                className="size-4"
+                                aria-hidden="true"
+                            />
+                        </button>
+
+                        <ul
+                            tabIndex={-1}
+                            className="menu dropdown-content z-30 mt-2 w-40 rounded-xl border border-(--border) bg-(--surface) p-2 shadow-xl"
+                        >
+                            {(Object.keys(sortLabels) as WorkoutSortOption[]).map(
+                                (option) => (
+                                    <li key={option}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSortOption(option)}
+                                            className={
+                                                sortOption === option
+                                                    ? "text-(--accent)"
+                                                    : "text-white"
+                                            }
+                                        >
+                                            {sortLabels[option]}
+                                        </button>
+                                    </li>
+                                ),
+                            )}
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -72,6 +141,8 @@ export default function PlanContent() {
                             key={workout.id}
                             workout={workout}
                             showDoneAction={activeTab === "plan"}
+                            onMarkDone={handleMarkDone}
+                            onRemove={handleRemove}
                         />
                     ))
                 ) : (

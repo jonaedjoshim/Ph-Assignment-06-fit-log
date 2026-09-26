@@ -50,6 +50,10 @@ export const subscribeToWorkoutStorage = (callback: () => void) => {
     };
 };
 
+const notifyStorageChange = () => {
+    window.dispatchEvent(new Event(storageEvent));
+};
+
 export const addWorkoutToList = (
     workout: Workout,
     type: WorkoutListType,
@@ -76,10 +80,31 @@ export const addWorkoutToList = (
         JSON.stringify([...workouts, workout]),
     );
 
-    window.dispatchEvent(new Event(storageEvent));
+    notifyStorageChange();
 
     return {
         success: true,
         reason: "added" as const,
     };
+};
+
+export const removeWorkoutFromList = (
+    workoutId: number,
+    type: WorkoutListType,
+) => {
+    const workouts = getStoredWorkouts(type);
+    const updatedWorkouts = workouts.filter(
+        (workout) => workout.id !== workoutId,
+    );
+
+    localStorage.setItem(
+        storageKeys[type],
+        JSON.stringify(updatedWorkouts),
+    );
+
+    notifyStorageChange();
+};
+
+export const markWorkoutAsDone = (workoutId: number) => {
+    removeWorkoutFromList(workoutId, "plan");
 };

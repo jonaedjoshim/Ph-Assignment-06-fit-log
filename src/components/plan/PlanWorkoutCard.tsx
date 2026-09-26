@@ -7,11 +7,15 @@ import type { Workout } from "@/types/workout";
 type PlanWorkoutCardProps = {
     workout: Workout;
     showDoneAction?: boolean;
+    onMarkDone?: (workout: Workout) => void;
+    onRemove: (workout: Workout) => void;
 };
 
 export default function PlanWorkoutCard({
     workout,
     showDoneAction = false,
+    onMarkDone,
+    onRemove,
 }: PlanWorkoutCardProps) {
     return (
         <article className="flex flex-col gap-5 rounded-2xl border border-(--border) bg-(--surface) p-4 sm:flex-row sm:items-center">
@@ -54,6 +58,7 @@ export default function PlanWorkoutCard({
                 {showDoneAction && (
                     <button
                         type="button"
+                        onClick={() => onMarkDone?.(workout)}
                         className="btn btn-sm rounded-full border-none bg-(--accent) px-5 font-bold text-black shadow-none hover:bg-[#b5eb00]"
                     >
                         <FiCheck className="size-4" aria-hidden="true" />
@@ -63,6 +68,7 @@ export default function PlanWorkoutCard({
 
                 <button
                     type="button"
+                    onClick={() => onRemove(workout)}
                     aria-label={`Remove ${workout.name}`}
                     className="btn btn-sm btn-square btn-ghost text-(--muted) hover:text-white"
                 >
